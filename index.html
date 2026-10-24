@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>脑洞复盘指挥中心【严肃复盘 请勿笑场】</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- 顶部装饰条 -->
+<div class="topbar">
+  <span>★ 脑洞复盘指挥中心内网 ★</span>
+  <span class="blink">机密 · 仅供本人观看</span>
+  <span>您是第 <b class="digit">0</b><b class="digit">0</b><b class="digit">1</b><b class="digit">0</b><b class="digit">2</b><b class="digit">4</b> 位被复盘者</span>
+</div>
+
+<!-- ========== 画面一：假正经 Loading ========== -->
+<section id="screen-loading" class="screen active">
+  <div class="loadbox">
+    <div class="load-title">脑洞复盘系统 <span class="dim">v1.0.24（五毛钱特供版）</span></div>
+    <div id="load-log" class="load-log"></div>
+    <div class="loadbar"><i id="loadbar-fill"></i></div>
+    <div id="load-pct" class="load-pct">0%</div>
+    <button id="btn-enter" class="btn98 btn-big hidden">进 入 复 盘（严肃）</button>
+    <button id="btn-skip" class="btn98 btn-skip">跳过片头（赶时间）</button>
+  </div>
+</section>
+
+<!-- ========== 画面二：登记窗口（Win2003 风） ========== -->
+<section id="screen-form" class="screen">
+  <div class="window98">
+    <div class="win-title">
+      <span>脑洞复盘登记表.exe — 组织已经掌握你的收藏夹</span>
+      <span class="win-btns"><i>▁</i><i>□</i><i>✕</i></span>
+    </div>
+    <div class="win-body">
+      <p class="form-tip">请如实填写。隐瞒脑洞死亡事实的，从严处理（并不会）。</p>
+      <div class="field">
+        <label>姓　名：</label>
+        <input id="in-nick" class="in98" maxlength="12" placeholder="请输入昵称（反正也没人看）">
+      </div>
+      <div id="questions"></div>
+      <div id="form-warn" class="form-warn hidden"></div>
+      <div class="form-actions">
+        <button id="btn-start" class="btn98 btn-big">提交并启动复盘程序</button>
+      </div>
+      <p class="form-note">※ 提交即代表你承认收藏夹里那 400 多个脑洞「改天再看」。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 画面三：复盘报告（7 页） ========== -->
+<section id="screen-report" class="screen">
+  <div id="report-pages">
+
+    <!-- 第1页 封面（红头文件） -->
+    <div class="page paper">
+      <div class="redhead">脑洞复盘指挥中心文件</div>
+      <div class="docno">脑复字〔2026〕第 1024 号</div>
+      <hr class="redline">
+      <h1 class="cover-title">关于 <span data-nick></span> 同志<br>脑洞大规模死亡事件的<br>复 盘 报 告</h1>
+      <div class="cover-meta">
+        <p>主　送：<span data-nick></span> 同志本人及其收藏夹</p>
+        <p>抄　送：各大 flag 遗址、各「改天一定」案卷保管处</p>
+        <p>密　级：机密 · 看完必须假装反思</p>
+      </div>
+      <p class="cover-body">经查，你名下收藏夹内发现大量脑洞遗体，死状安详，现场无任何抢救痕迹。为严肃纪律、端正收藏态度，特开展本次复盘。请你摆正心态，逐页阅读，并在阅读过程中保持沉重（五毛钱特效将帮助你保持）。</p>
+      <div class="cover-sign">
+        <canvas id="stamp-cover" width="200" height="200" class="stamp"></canvas>
+        <p>脑洞复盘指挥中心</p>
+        <p id="cover-date"></p>
+      </div>
+      <div class="sparkle s1">✨</div>
+      <div class="sparkle s2">✨</div>
+    </div>
+
+    <!-- 第2页 航天监控大屏 -->
+    <div class="page page-screen">
+      <div class="ms-wrap">
+        <div class="ms-head">
+          <div class="ms-logo">▲ 脑洞航天局 · 任务控制中心</div>
+          <div class="ms-clock">MCT <span id="ms-clock">--:--:--</span></div>
+          <div class="ms-head-right">
+            <span class="ms-online"><i class="ms-lamp g"></i>系统在线（假装）</span>
+            <button id="sw-crt" class="rocker" title="切换监控画质"><i></i>CRT 画质</button>
+          </div>
+        </div>
+
+        <div class="ms-grid">
+          <div class="panel p-rate">
+            <div class="p-title">脑洞存活率 · 实时监测</div>
+            <div class="big-rate"><span id="ms-rate">0.00</span><small>%</small></div>
+            <div class="p-sub blink">▼ 持续下跌中，抢救意义不大</div>
+          </div>
+          <div class="panel p-counts">
+            <div class="p-title">在轨 / 失联统计</div>
+            <div class="count-row"><span>累计发射（收藏）</span><b id="ms-collect">-</b></div>
+            <div class="count-row"><span>在轨（存活）</span><b id="ms-alive" class="cg">-</b></div>
+            <div class="count-row"><span>已失联</span><b id="ms-lost" class="cr">-</b></div>
+            <div class="count-row"><span>抢救成功</span><b class="cr">0</b></div>
+          </div>
+          <div class="panel p-alert" id="panel-alert" title="点击查看通缉令">
+            <div class="p-title">实时告警 · 脑洞失联播报</div>
+            <ul id="ms-alerts" class="ms-alerts"></ul>
+          </div>
+          <div class="panel p-wall">
+            <div class="p-title">脑洞状态灯墙（点击红灯查看墓志铭）</div>
+            <div id="ms-wall" class="ms-wall"></div>
+            <div class="wall-legend">
+              <span><i class="ms-lamp g"></i>在轨</span>
+              <span><i class="ms-lamp r"></i>失联</span>
+              <span><i class="ms-lamp y"></i>抢救中（并没有）</span>
+            </div>
+          </div>
+          <div class="panel p-trend">
+            <div class="p-title">存活率走势 · 实时（没救）</div>
+            <canvas id="ms-trend" width="460" height="180"></canvas>
+          </div>
+          <div class="panel p-gauge">
+            <div class="p-title">收藏欲望指数</div>
+            <canvas id="ms-gauge" width="240" height="170"></canvas>
+          </div>
+          <div class="panel p-health" id="panel-health" title="点击调取体检报告">
+            <div class="p-title">宇航员健康监测 <span class="dim">（机密）</span></div>
+            <div class="health-row">脑洞体温 <b class="cr">0℃</b></div>
+            <div class="health-row">执行心率 <b class="cr">3 次/年</b></div>
+            <div class="health-row">收藏血压 <b class="cg">98/98</b></div>
+            <div class="p-sub">※ 点击面板调阅完整体检报告（需权限，其实不需要）</div>
+          </div>
+        </div>
+
+        <div class="ms-foot">
+          <span>深空网络延迟：3 光年（正常）</span>
+          <span>特效预算剩余：¥0.50</span>
+          <span>值班操作员：<span data-nick></span></span>
+          <span class="blink cr">WARNING：本中心 24 小时无人值守</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第3页 数据总览 -->
+    <div class="page paper">
+      <div class="page-head"><span class="wordart">数 据 总 览</span></div>
+      <div class="stat-grid">
+        <div class="stat">累计收藏脑洞<b id="st-collect">-</b>个</div>
+        <div class="stat">实际开工<b id="st-started">-</b>个</div>
+        <div class="stat">目前存活<b id="st-alive">-</b>个</div>
+        <div class="stat">脑洞存活率<b id="st-rate">-</b>%</div>
+        <div class="stat">最早文物距今<b id="st-days">-</b>天</div>
+        <div class="stat">「改天」使用次数<b id="st-gaitian">-</b>次</div>
+      </div>
+      <div class="excel-caption">Microsoft Excel - 脑洞生命周期.xls <span class="dim">（兼容模式）</span></div>
+      <div class="excel-frame"><canvas id="chart-life" width="520" height="340"></canvas></div>
+      <p class="caption">图 1　脑洞生命周期漏斗（Excel 2003 渲染引擎 · 斥资五毛）</p>
+      <p class="comment">点评：漏斗下端收窄明显，符合「收藏即终点」的普遍规律。</p>
+      <div class="excel-caption">Microsoft Excel - 脑洞成分分析.xls <span class="dim">（兼容模式）</span></div>
+      <div class="excel-frame"><canvas id="chart-radar" width="520" height="360"></canvas></div>
+      <p class="caption">图 1-2　脑洞成分雷达图（五角星限定 · 执行力那一格小得可怜）</p>
+    </div>
+
+    <!-- 第3页 死因分析 -->
+    <div class="page paper">
+      <div class="page-head"><span class="wordart">死 因 分 析</span></div>
+      <div class="excel-caption">Microsoft Excel - 脑洞死因鉴定.xls <span class="dim">（兼容模式）</span></div>
+      <div class="excel-frame"><canvas id="chart-cause" width="560" height="340"></canvas></div>
+      <p class="caption">图 2　脑洞死因构成（3D 饼图 · 饼是立体的，态度是端正的）</p>
+      <div class="verdict">
+        <div class="verdict-title">死 因 鉴 定 书</div>
+        <p>编　　号：脑鉴〔2026〕第 <span id="vd-no"></span> 号</p>
+        <p>被鉴定人：<span data-nick></span> 同志</p>
+        <p>主 死 因：<span id="vd-main"></span></p>
+        <p>收藏心态：<span id="vd-mind"></span></p>
+        <p>最久文物：<span id="vd-relic"></span></p>
+        <p class="verdict-end">鉴定结论：<b>死 得 不 冤 。</b></p>
+        <canvas id="stamp-verdict" width="160" height="160" class="stamp stamp-sm"></canvas>
+      </div>
+    </div>
+
+    <!-- 第4页 病程回顾 -->
+    <div class="page paper">
+      <div class="page-head"><span class="wordart">病 程 回 顾</span></div>
+      <marquee class="mq" scrollamount="6" id="mq-timeline"></marquee>
+      <table class="tbl" id="tbl-timeline">
+        <thead><tr><th>时间</th><th>事件</th><th>备注</th><th>状态</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="sick-row">
+        <div class="rescue">
+          抢 救 记 录 ：<b class="blink red">无。（一次都没有）</b>
+        </div>
+        <div class="lastwords-box">
+          <div class="lw-title">脑洞生前留言</div>
+          <marquee direction="up" height="96" scrollamount="2" class="lw">
+            「等我火了你就知道了」<br><br>「这个真的有用」<br><br>「先马，周末必看」<br><br>「这次不一样」<br><br>「我不怪你」
+          </marquee>
+        </div>
+      </div>
+      <p class="comment">点评：病程发展平稳，从「这次一定」到「下次再说」，全程无反抗。</p>
+    </div>
+
+    <!-- 第5页 横向对比 -->
+    <div class="page paper">
+      <div class="page-head"><span class="wordart">横 向 对 比</span></div>
+      <div class="excel-caption">Microsoft Excel - 全国脑洞普查数据.xls <span class="dim">（兼容模式）</span></div>
+      <div class="excel-frame"><canvas id="chart-vs" width="520" height="340"></canvas></div>
+      <p class="caption">图 3　收藏数量对比（单位：个 / 全国数据来源：指挥中心拍脑袋办公室）</p>
+      <div class="vs-text" id="vs-text"></div>
+    </div>
+
+    <!-- 第6页 复盘结论 -->
+    <div class="page paper page-concl">
+      <div class="page-head"><span class="wordart">复 盘 结 论</span></div>
+      <div class="concl">
+        <p>一、经全面复盘，<span data-nick></span> 同志的脑洞死因高度一致：<b>死于被收藏得太好</b>。收藏动作完成的一刻，脑洞同时失去了被实现的机会。</p>
+        <p>二、收藏夹不是陵园，flag 不是装饰品，「改天」不是历法单位。</p>
+        <p>三、综合评定：<span data-nick></span> 同志荣获 <b id="concl-persona" class="red"></b> 称号。</p>
+      </div>
+      <div class="mbti-card">
+        <div class="m-title">收 藏 家 M B T I 鉴 定</div>
+        <div class="mbti-code" id="mbti-code">----</div>
+        <div class="mbti-desc" id="mbti-desc"></div>
+      </div>
+      <div class="measures">
+        <div class="m-title">整 改 措 施</div>
+        <ol id="ol-measures"></ol>
+      </div>
+      <div class="go-award">
+        <button id="btn-go-award" class="btn98 btn-big">前 往 领 奖（金光闪闪）</button>
+      </div>
+    </div>
+
+    <!-- 第7页 奖状 -->
+    <div class="page paper award-page">
+      <div class="page-head"><span class="wordart rainbow">颁 奖 现 场</span></div>
+      <marquee class="mq" scrollamount="5">★ 锣鼓喧天 鞭炮齐鸣 红旗招展 人山人海（以上均为五毛钱特效）★</marquee>
+      <canvas id="award-canvas" width="960" height="680" class="award-canvas"></canvas>
+      <div class="award-actions">
+        <button id="btn-download" class="btn98 btn-big">下载奖状 PNG</button>
+        <button id="btn-copy" class="btn98 btn-big">复制分享文案</button>
+        <button id="btn-restart" class="btn98 btn-big">重新复盘（换个昵称再来）</button>
+      </div>
+      <p class="form-note">※ 手机端建议点「下载奖状 PNG」；若浏览器只在新页面打开图片，可长按该图片保存。本奖状由五毛钱特效渲染引擎倾力打造，不作报销凭证。</p>
+    </div>
+
+  </div>
+
+  <!-- 翻页导航 -->
+  <div class="navbar">
+    <button id="btn-prev" class="btn98">◀ 上一页</button>
+    <span id="page-ind" class="page-ind">1 / 7</span>
+    <button id="btn-next" class="btn98">下一页 ▶</button>
+  </div>
+</section>
+
+<!-- 底部跑马灯 -->
+<footer id="foot-wrap" class="hidden">
+  <marquee id="foot-jokes" scrollamount="4"></marquee>
+  <div class="rainbow-bar"></div>
+  <div class="foot-note">本站最佳浏览环境：IE 6.0 · 1024×768 · 拨号上网 ｜ 脑洞复盘指挥中心 荣誉出品</div>
+</footer>
+
+<!-- CRT 画质层（默认关闭，拨杆开启） -->
+<div id="crt-layer" class="hidden"></div>
+
+<!-- ========== 隐藏控制台（Konami / 连击 Logo 召唤） ========== -->
+<div id="console-mask" class="egg-mask hidden">
+  <div class="window98 console-win">
+    <div class="win-title">
+      <span>隐藏控制台.exe — 你怎么找到这的？！</span>
+      <span class="win-btns"><i>▁</i><i>□</i><i id="console-x">✕</i></span>
+    </div>
+    <div class="win-body">
+      <p class="form-tip">机密模块一览。组织不承认本窗口的存在。</p>
+      <div class="console-btns">
+        <button class="btn98" data-egg="health">🩺 脑洞体检报告单</button>
+        <button class="btn98" data-egg="wanted">🚨 通缉令：下一个脑洞</button>
+        <button class="btn98" data-egg="rpg">⚔ RPG 角色面板</button>
+      </div>
+      <div class="console-toggles">
+        <button id="sw-crt2" class="rocker"><i></i>CRT 画质</button>
+        <button id="sw-sfx" class="rocker on"><i></i>音效</button>
+      </div>
+      <p class="form-note">※ 本控制台由 Konami 秘籍赞助播出（↑↑↓↓←→←→BA）。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 彩蛋一：体检报告单 ========== -->
+<div id="egg-health" class="egg-mask hidden">
+  <div class="paper egg-paper">
+    <div class="page-head"><span class="wordart">体 检 报 告</span></div>
+    <p class="egg-meta">姓　名：<span data-nick></span>　　性　别：不详　　收藏龄：<span id="hl-days">-</span> 天</p>
+    <table class="tbl" id="tbl-health">
+      <thead><tr><th>检查项目</th><th>结果</th><th>参考值</th><th>提示</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <div class="verdict">
+      <div class="verdict-title">医 嘱</div>
+      <ol id="hl-advice" class="hl-advice"></ol>
+      <p class="verdict-end">医师签名：<b id="hl-doctor"></b></p>
+      <canvas id="stamp-health" width="140" height="140" class="stamp stamp-sm"></canvas>
+    </div>
+    <div class="egg-close"><button class="btn98 btn-big" data-close>关 闭（已阅，改天再治）</button></div>
+  </div>
+</div>
+
+<!-- ========== 彩蛋二：通缉令 ========== -->
+<div id="egg-wanted" class="egg-mask hidden">
+  <div class="paper egg-paper wanted-paper">
+    <div class="wanted-title">通 缉 令</div>
+    <div class="wanted-photo">
+      <div class="wanted-face">？</div>
+      <p>嫌犯画像（目击者称：每次长得都不一样）</p>
+    </div>
+    <div class="wanted-body">
+      <p>姓　　名：<b id="wt-name"></b></p>
+      <p>体貌特征：<span id="wt-features"></span></p>
+      <p>所犯罪行：<span id="wt-crime"></span></p>
+      <p>悬赏金额：<b class="red" id="wt-reward"></b></p>
+      <p>举报电话：<span id="wt-phone"></span></p>
+      <p class="wanted-note">⚠ 警告：该嫌犯正试图接近你，惯用话术「这次不一样」。请勿轻信，请勿收藏。</p>
+    </div>
+    <canvas id="stamp-wanted" width="150" height="150" class="stamp"></canvas>
+    <div class="egg-close"><button class="btn98 btn-big" data-close>关 闭（已加强戒备）</button></div>
+  </div>
+</div>
+
+<!-- ========== 彩蛋三：RPG 角色面板 ========== -->
+<div id="egg-rpg" class="egg-mask hidden">
+  <div class="rpg-win">
+    <div class="rpg-head">✦ 角色面板 · <span data-nick></span> ✦</div>
+    <div class="rpg-body">
+      <div class="rpg-left">
+        <div class="rpg-avatar">🧠</div>
+        <p>职　业：<b id="rpg-job"></b></p>
+        <p>等　级：LV.99（收藏年限堆的）</p>
+        <p>状　态：<span id="rpg-status"></span></p>
+      </div>
+      <div class="rpg-right">
+        <div class="rpg-bar-row">HP（执行力）
+          <div class="rpg-bar hp"><i id="rpg-hp"></i></div><span id="rpg-hp-t"></span>
+        </div>
+        <div class="rpg-bar-row">MP（收藏欲）
+          <div class="rpg-bar mp"><i id="rpg-mp"></i></div><span id="rpg-mp-t"></span>
+        </div>
+        <div class="rpg-sec">技 能</div>
+        <ul id="rpg-skills" class="rpg-list"></ul>
+        <div class="rpg-sec">装 备</div>
+        <ul id="rpg-equips" class="rpg-list"></ul>
+      </div>
+    </div>
+    <div class="egg-close"><button class="btn98 btn-big" data-close>退出游戏（并不）</button></div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/easter.js"></script>
+</body>
+</html>

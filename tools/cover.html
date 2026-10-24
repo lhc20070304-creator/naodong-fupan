@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+  #stage {
+    width: 1280px; height: 720px; overflow: hidden;
+    transform-origin: top left; position: relative;
+    font-family: "SimSun", "宋体", serif;
+    background: #040e1e;
+    background-image:
+      radial-gradient(1px 1px at 18% 22%, #fff 50%, transparent 50%),
+      radial-gradient(1.5px 1.5px at 62% 68%, #ffd700 50%, transparent 50%),
+      radial-gradient(1px 1px at 82% 16%, #fff 50%, transparent 50%),
+      radial-gradient(1px 1px at 34% 82%, #7cffb2 50%, transparent 50%),
+      radial-gradient(1.5px 1.5px at 90% 56%, #fff 50%, transparent 50%),
+      radial-gradient(1px 1px at 8% 58%, #ff8 50%, transparent 50%),
+      radial-gradient(1px 1px at 48% 8%, #fff 50%, transparent 50%);
+    background-size: 300px 300px;
+    color: #bfe9ff;
+  }
+  /* CRT 扫描线 */
+  #stage::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 2px, transparent 2px 4px);
+  }
+  #stage::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    box-shadow: inset 0 0 160px rgba(0,0,0,.8);
+  }
+
+  /* 顶部红头 */
+  .red-band {
+    background: linear-gradient(180deg, #7a0000, #4d0000);
+    border-bottom: 3px double #ffd700;
+    text-align: center; padding: 10px 0 8px;
+    position: relative; z-index: 2;
+  }
+  .red-band h1 {
+    color: #ffd700; font-family: "SimHei", "黑体", sans-serif;
+    font-size: 22px; letter-spacing: 10px; font-weight: bold;
+  }
+  .red-band p { color: #ffb0b0; font-size: 12px; letter-spacing: 4px; margin-top: 3px; }
+
+  /* 中央标题区 */
+  .center { position: relative; z-index: 2; text-align: center; padding-top: 44px; }
+  .wordart {
+    display: inline-block; font-family: "SimHei", "黑体", sans-serif;
+    font-weight: 900; font-size: 108px; letter-spacing: 14px;
+    background: linear-gradient(180deg, #fff 0%, #fff200 18%, #ffb300 38%, #ff3600 62%, #b20000 85%, #5c0000 100%);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    filter: drop-shadow(5px 5px 0 #000080) drop-shadow(10px 10px 0 rgba(0,0,0,.35));
+    transform: skew(-3deg);
+  }
+  .subtitle {
+    margin-top: 18px; font-size: 24px; color: #9fd8ff; letter-spacing: 6px;
+  }
+  .subtitle b { color: #ff5050; }
+  .tagrow { margin-top: 20px; }
+  .tag {
+    display: inline-block; font-size: 14px; color: #26ff7a;
+    border: 1px solid rgba(38,255,122,.5); padding: 4px 14px; margin: 0 6px;
+    background: rgba(3, 30, 20, .6); letter-spacing: 2px;
+  }
+
+  /* 大屏指标条 */
+  .panels {
+    position: relative; z-index: 2;
+    display: flex; justify-content: center; gap: 18px; margin-top: 42px;
+  }
+  .panel {
+    width: 250px; padding: 14px 18px; text-align: center;
+    border: 1px solid rgba(0, 229, 255, .35);
+    background:
+      linear-gradient(to right, #00e5ff 2px, transparent 2px) 0 0 / 12px 12px,
+      linear-gradient(to bottom, #00e5ff 2px, transparent 2px) 0 0 / 12px 12px,
+      linear-gradient(to left, #00e5ff 2px, transparent 2px) 100% 0 / 12px 12px,
+      linear-gradient(to bottom, #00e5ff 2px, transparent 2px) 100% 0 / 12px 12px,
+      linear-gradient(to right, #00e5ff 2px, transparent 2px) 0 100% / 12px 12px,
+      linear-gradient(to top, #00e5ff 2px, transparent 2px) 0 100% / 12px 12px,
+      linear-gradient(to left, #00e5ff 2px, transparent 2px) 100% 100% / 12px 12px,
+      linear-gradient(to top, #00e5ff 2px, transparent 2px) 100% 100% / 12px 12px,
+      linear-gradient(180deg, rgba(8,34,66,.92), rgba(3,13,31,.92));
+    background-repeat: no-repeat;
+  }
+  .panel .k { font-size: 13px; color: #00e5ff; letter-spacing: 3px; }
+  .panel .v {
+    font-family: "Courier New", monospace; font-weight: bold; font-size: 46px;
+    margin-top: 6px; text-shadow: 0 0 12px rgba(255,60,60,.8);
+  }
+  .v.red { color: #ff5050; } .v.green { color: #26ff7a; text-shadow: 0 0 12px rgba(38,255,122,.7); }
+
+  /* 灯墙 + 告警条 */
+  .strip {
+    position: relative; z-index: 2; margin: 40px auto 0; width: 900px;
+    display: flex; align-items: center; gap: 18px;
+  }
+  .lamps { display: flex; gap: 7px; }
+  .lamp { width: 16px; height: 16px; border-radius: 50%; background: #ff4040; box-shadow: 0 0 8px #ff4040; }
+  .lamp.g { background: #26ff7a; box-shadow: 0 0 8px #26ff7a; }
+  .lamp.y { background: #ffd700; box-shadow: 0 0 8px #ffd700; }
+  .alert {
+    flex: 1; border: 1px solid rgba(255,64,64,.5); background: rgba(60, 4, 4, .55);
+    color: #ffb0b0; font-size: 15px; padding: 8px 14px; letter-spacing: 1px;
+    font-family: "Courier New", "SimSun", monospace;
+  }
+  .alert b { color: #ff5050; }
+
+  /* 公章 */
+  .stamp {
+    position: absolute; right: 120px; top: 210px; z-index: 3;
+    width: 190px; height: 190px; transform: rotate(-14deg); opacity: .92;
+  }
+
+  /* 底部跑马灯 */
+  .mq-band {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+    background: #400000; color: #ffd700; font-size: 14px; letter-spacing: 2px;
+    border-top: 2px solid #ffd700; padding: 8px 0; text-align: center;
+  }
+  .rainbow {
+    position: absolute; left: 0; right: 0; bottom: 34px; height: 6px; z-index: 2;
+    background: repeating-linear-gradient(90deg, #f00 0 40px, #ff8000 40px 80px, #ffe600 80px 120px, #0a0 120px 160px, #06c 160px 200px, #80f 200px 240px);
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="red-band">
+    <h1>脑 洞 复 盘 指 挥 中 心 文 件</h1>
+    <p>脑复字〔2026〕第 1024 号 · 机密 · 仅供本人观看</p>
+  </div>
+
+  <div class="center">
+    <div class="wordart">脑洞复盘指挥中心</div>
+    <div class="subtitle">你的收藏夹 · <b>脑洞陵园</b>事故复盘现场</div>
+    <div class="tagrow">
+      <span class="tag">#Trae1024</span>
+      <span class="tag">#五毛钱特效</span>
+      <span class="tag">#航天监控大屏</span>
+      <span class="tag">#Konami彩蛋</span>
+    </div>
+  </div>
+
+  <div class="panels">
+    <div class="panel"><div class="k">脑洞存活率</div><div class="v red">0.31%</div></div>
+    <div class="panel"><div class="k">累计安葬脑洞</div><div class="v red">768</div></div>
+    <div class="panel"><div class="k">抢救成功</div><div class="v green">0</div></div>
+  </div>
+
+  <div class="strip">
+    <div class="lamps">
+      <span class="lamp"></span><span class="lamp"></span><span class="lamp y"></span>
+      <span class="lamp"></span><span class="lamp g"></span><span class="lamp"></span>
+      <span class="lamp"></span><span class="lamp y"></span><span class="lamp"></span>
+      <span class="lamp"></span><span class="lamp"></span><span class="lamp"></span>
+    </div>
+    <div class="alert">⚠ <b>[ALERT]</b> 刚刚又有一个脑洞失联，家属情绪稳定 ……</div>
+  </div>
+
+  <svg class="stamp" viewBox="0 0 200 200">
+    <circle cx="100" cy="100" r="90" fill="none" stroke="#d40000" stroke-width="6"/>
+    <polygon fill="#d40000" points="100,72 108,92 129,92 112,105 119,126 100,113 81,126 88,105 71,92 92,92"/>
+    <text fill="#d40000" font-size="17" font-weight="bold" font-family="SimSun">
+      <textPath href="#stamparc" startOffset="4%">脑洞复盘指挥中心</textPath>
+    </text>
+    <defs><path id="stamparc" d="M 100 100 m -62 0 a 62 62 0 1 1 124 0 a 62 62 0 1 1 -124 0"/></defs>
+    <text x="100" y="152" fill="#d40000" font-size="15" font-weight="bold" text-anchor="middle" font-family="SimSun">复盘专用</text>
+  </svg>
+
+  <div class="rainbow"></div>
+  <div class="mq-band">★ 收藏不执行 亲人两行泪 ★ 改天是星期八，不存在的 ★ 最佳浏览环境 IE6.0 + 1024×768 ★ 输入 ↑↑↓↓←→←→BA 试试 ★</div>
+</div>
+<script>
+  // 让 1280×720 舞台始终完整填满任意视口
+  function fit() {
+    const s = Math.min(innerWidth / 1280, innerHeight / 720);
+    const stage = document.getElementById('stage');
+    stage.style.transform = 'scale(' + s + ')';
+    stage.style.marginLeft = Math.max(0, (innerWidth - 1280 * s) / 2) + 'px';
+    stage.style.marginTop = Math.max(0, (innerHeight - 720 * s) / 2) + 'px';
+  }
+  fit(); addEventListener('resize', fit);
+</script>
+</body>
+</html>
